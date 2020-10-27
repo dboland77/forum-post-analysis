@@ -5,18 +5,18 @@ import * as Util from "./Utilities";
 
 //Posts by creation month
 const GET_POSTS = gql`
-query getPosts($count: Int!) {
-  allPosts(count: $count) {
-    id
-    title
-    published
-    createdAt
-    likelyTopics {
-      label
-      likelihood
+  query getPosts($count: Int!) {
+    allPosts(count: $count) {
+      id
+      title
+      published
+      createdAt
+      likelyTopics {
+        label
+        likelihood
+      }
     }
   }
-}
 `;
 
 const Posts = ({ onPostSelected }) => {
@@ -27,31 +27,33 @@ const Posts = ({ onPostSelected }) => {
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
 
-  let addMonthName = data.allPosts.map(item => {
-    return{
+  // The code below creates month groups with 3 most likely topics
+  let addMonthName = data.allPosts.map((item) => {
+    return {
       ...item,
-      month: Util.monthNames[Util.getDateFromEpoch(item.createdAt).getMonth()]
+      month: Util.monthNames[Util.getDateFromEpoch(item.createdAt).getMonth()],
+      year: Util.getDateFromEpoch(item.createdAt).getFullYear(),
     };
-  })
+  });
 
-  let myTopics = addMonthName.map(item => {
-    return{
-      month: item.month,
-      likelyTopics: item.likelyTopics.slice(0,3)
+  let myTopics = addMonthName.map((item) => {
+    return {
+      month: `${item.month}_${item.year}`,
+      likelyTopics: item.likelyTopics.slice(0, 3),
     };
-  })
+  });
 
-  console.log(Util.sortLikelihood(myTopics))
+  //console.log(Util.sortLikelihood(myTopics))
 
-  let group = myTopics.reduce((r,a)=>{
-    console.log("a",a);
-    console.log("r",r);
-    r[a.month] = [...r[a.month] || [], a];
-    return r;
-  },{});
+  let monthGroups = myTopics.reduce((monthGroups, currentValue) => {
+    monthGroups[currentValue.month] = [
+      ...(monthGroups[currentValue.month] || []),
+      currentValue,
+    ];
+    return monthGroups;
+  }, {});
 
-  console.log("group",group)
-
+  console.log("group", monthGroups);
 
   return (
     <Fragment>
