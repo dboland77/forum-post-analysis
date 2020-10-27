@@ -22,15 +22,16 @@
 //   document.getElementById("root")
 // );
 
+import React from "react";
+import { render } from "react-dom";
+import ParentSize from "@visx/responsive/lib/components/ParentSize";
 
-import React from 'react';
-import { render } from 'react-dom';
-import ParentSize from '@visx/responsive/lib/components/ParentSize';
-
-import Example from './Axis';
-// import './sandbox-styles.css';
+import Example from "./Axis.js";
+import "./sandbox-styles.css";
 
 render(
-  <ParentSize>{({ width, height }) => <Example width={width} height={height} />}</ParentSize>,
-  document.getElementById('root'),
+  <ParentSize>
+    {({ width, height }) => <Example width={width} height={height} />}
+  </ParentSize>,
+  document.getElementById("root")
 );
