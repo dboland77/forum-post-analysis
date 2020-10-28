@@ -1,0 +1,8 @@
+.graphContainer {
+  max-width: 50rem;
+  max-height: 50rem;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}

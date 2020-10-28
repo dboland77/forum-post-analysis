@@ -1,21 +1,28 @@
-## Analysing forum posts (Topic analysis)
+# Visualising forum posts (Topic analysis output)
 
-Project dependencies for Apollo, GraphQL and Visx added
+## Steps
+1. GraphiQL used to explore the faker dataset
 
-Apollo client set up and connected to fakerQL
+2. Create-React-App bootstrapped project and added dependencies for Apollo, GraphQL and Visx
 
-Posts retrieved successfully
+3. Set up Apollo client and connect to fakerQL
 
-Count passed as a variable to the graphql query (currently hardcoded to 8 in the UseQuery hook)
+4. Query the dataset and ensure Posts are retrieved successfully
 
-Visx Examples of BarStack, AreaChart and Tooltip implemented responsively
+5. Count passed as a variable to the graphql query (currently hardcoded in the UseQuery hook in both the Autho and Posts components). 
+
+6. Refactored to set n=1000 for now to ensure a reasonable sample size and pass as props.
+
+7. For the likelihood distribution I just took the most probable entry as the label for that post. 
+
+6. Visx Examples of BarStack, AreaChart and Tooltip implemented responsively
 
 Next step is to hook these up to my data.
 
 Noted that the date returned was not a user-friendly format. It is an epoch date
 in milliseconds so I wrote a quick conversion function.
 
-#First major issue
+## First major issue
 Warning: "React does not recognize the `xScale` prop on a DOM element. If you
 intentionally want it to appear in the DOM as a custom attribute spell it as
 lowercase `xscale` instead
@@ -34,5 +41,19 @@ Main issues / problems:
 5. Visx examples are mainly in Typescript so I had to decide whether to interpret this to javascript or convert my existing project to typescript. I went with the former (for now)
 6. Codesandbox demos not working for most elements and documentation pretty thin!
 
+## Improvements / Future Development.
 
+This task took a significant amount of time so I have not done the following which are necessary:
+
+1. Refactoring - remove all comments, redundant node modules, module names, folder structure
+
+2. Convert to Typescript? (Depends on the rest of the code base)
+
+3. Add Redux for state management
+
+4. Allow user input for number of cases (+/-)
+
+5. Full testing (Jest, Enzyme)
+
+6. Proper error handling and Error Boundaries
 

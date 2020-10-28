@@ -21,46 +21,16 @@ const tooltipStyles = {
   color: "white",
 };
 
-const data = cityTemperature.slice(0, 12);
-const keys = Object.keys(data[0]).filter((d) => d !== "date");
 
-const temperatureTotals = data.reduce((allTotals, currentDate) => {
-  const totalTemperature = keys.reduce((dailyTotal, k) => {
-    dailyTotal += Number(currentDate[k]);
-    return dailyTotal;
-  }, 0);
-  allTotals.push(totalTemperature);
-  return allTotals;
-}, []);
+const testData = cityTemperature.slice(0, 12);
 
-const parseDate = timeParse("%Y-%m-%d");
-const format = timeFormat("%b %d");
-const formatDate = (d) => format(parseDate(d));
-
-// accessors
-const getDate = (d) => d.date;
-
-// scales
-const dateScale = scaleBand({
-  domain: data.map(getDate),
-  padding: 0.2,
-});
-const temperatureScale = scaleLinear({
-  domain: [0, Math.max(...temperatureTotals)],
-  nice: true,
-});
-const colorScale = scaleOrdinal({
-  domain: keys,
-  range: [purple1, purple2, purple3],
-});
-
-let tooltipTimeout = 0;
-
+// MAIN FUNCTION STARTS HERE!!!
 export default function Example({
   width,
   height,
   events = false,
   margin = defaultMargin,
+  data=testData
 }) {
   const {
     tooltipOpen,
@@ -70,6 +40,43 @@ export default function Example({
     hideTooltip,
     showTooltip,
   } = useTooltip();
+  
+  console.log(data)
+  
+  
+  const keys = Object.keys(data[0]).filter((d) => d !== "date");
+  
+  const temperatureTotals = data.reduce((allTotals, currentDate) => {
+    const totalTemperature = keys.reduce((dailyTotal, k) => {
+      dailyTotal += Number(currentDate[k]);
+      return dailyTotal;
+    }, 0);
+    allTotals.push(totalTemperature);
+    return allTotals;
+  }, []);
+  
+  const parseDate = timeParse("%Y-%m-%d");
+  const format = timeFormat("%b %d");
+  const formatDate = (d) => format(parseDate(d));
+  
+  // accessors
+  const getDate = (d) => d.date;
+  
+  // scales
+  const dateScale = scaleBand({
+    domain: data.map(getDate),
+    padding: 0.2,
+  });
+  const temperatureScale = scaleLinear({
+    domain: [0, Math.max(...temperatureTotals)],
+    nice: true,
+  });
+  const colorScale = scaleOrdinal({
+    domain: keys,
+    range: [purple1, purple2, purple3],
+  });
+  
+  let tooltipTimeout = 0;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
 

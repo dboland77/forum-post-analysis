@@ -1,22 +1,21 @@
-// import React from "react";
-// import Posts from "./Posts";
-// import Graph from "./Example.tsx";
-// // import Author from "./Author";
+import React from "react";
+import Posts from "./Posts";
+// import Author from "./Author";
 
-// function App() {
-//   return (
-//     <div>
-//       {/* <h2>
-//         My first Apollo app
-//         <span role="img" aria-label="rocket">
-//           🚀
-//         </span>
-//       </h2>
-//       <Posts /> */}
-//       {/* <Author/> */}
-//       {/* <Example /> */}
-//     </div>
-//   );
-// }
+const POSTS_TO_RETRIEVE = 100;
 
-// export default App;
+function App() {
+  return (
+    
+    <div>
+      <h2>
+      Welcome to the App
+      </h2>
+      <Posts numberOfPosts={POSTS_TO_RETRIEVE}/>
+
+      {/* <Author/> */}
+    </div>
+  );
+}
+
+export default App;

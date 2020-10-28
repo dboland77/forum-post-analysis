@@ -1,7 +1,10 @@
-import React, { Fragment } from "react";
-
+import React from "react";
 import { gql, useQuery } from "@apollo/client";
 import * as Util from "./Utilities";
+import BarStack from "./BarStack";
+import ParentSize from "@visx/responsive/lib/components/ParentSize";
+import styles from "./GraphContainer.module.css";
+
 
 //Posts by creation month
 const GET_POSTS = gql`
@@ -19,9 +22,9 @@ const GET_POSTS = gql`
   }
 `;
 
-const Posts = ({ onPostSelected }) => {
+const Posts = (props, { onPostSelected }) => {
   const { loading, error, data } = useQuery(GET_POSTS, {
-    variables: { count: 10},
+    variables: { count: props.numberOfPosts },
   });
 
   if (loading) return "Loading...";
@@ -36,35 +39,72 @@ const Posts = ({ onPostSelected }) => {
     };
   });
 
+  //Just choosing the most likely topic
   let myTopics = addMonthName.map((item) => {
     return {
       month: `${item.month}_${item.year}`,
-      likelyTopics: item.likelyTopics.slice(0, 3),
+      Topic: item.likelyTopics[0].label,
     };
   });
 
-  //console.log(Util.sortLikelihood(myTopics))
+  // console.log(Util.sortLikelihood(myTopics))
 
-  let monthGroups = myTopics.reduce((monthGroups, currentValue) => {
-    monthGroups[currentValue.month] = [
-      ...(monthGroups[currentValue.month] || []),
-      currentValue,
-    ];
-    return monthGroups;
-  }, {});
+  function groupArrayOfObjects(list, key) {
+    return list.reduce(function (rv, x) {
+      (rv[x[key]] = rv[x[key]] || []).push(x);
+      return rv;
+    }, {});
+  }
 
-  console.log("group", monthGroups);
+  // console.log("topics", myTopics);
+
+  let groupedTopics = groupArrayOfObjects(myTopics, "month");
+
+  // Once we have the groupedTopics we can iterate through and GradientPinkBlue
+  // the top 3 topics by frequency each month
+
+  //   // convert object to key's array
+const keys = Object.keys(groupedTopics);
+
+//Define an empty dataset
+let dataset = [];
+let thisMonth={};
+
+
+//   // iterate over object
+keys.forEach((currentMonth) => {
+   
+  function occurences(dataArray) {
+    return dataArray.reduce(function (r, row) {
+      r[row.Topic] = ++r[row.Topic] || 1;
+      return r;
+    }, {});
+  }
+
+  let occuring = occurences(groupedTopics[currentMonth]);
+
+  const topThree = Object.fromEntries(
+    Object.entries(occuring)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 3)
+  );
+  
+  thisMonth = {
+    month: currentMonth,
+    ...topThree,
+  };
+  
+  dataset.push(thisMonth);
+
+});
+
+console.log("sorted", dataset);
+
 
   return (
-    <Fragment>
-      <select name="posts" onChange={onPostSelected}>
-        {data.allPosts.map((post) => (
-          <option key={post.id} value={post.title}>
-            {post.title}
-          </option>
-        ))}
-      </select>
-    </Fragment>
+    <ParentSize className={styles.graphContainer}>
+      {({ width, height }) => <BarStack width={width} height={height} data={dataset} />}
+    </ParentSize>
   );
 };
 
