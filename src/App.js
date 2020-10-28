@@ -8,9 +8,9 @@ function App() {
   return (
     
     <div>
-      <h2>
+      {/* <h2>
       Welcome to the App
-      </h2>
+      </h2> */}
       <Posts numberOfPosts={POSTS_TO_RETRIEVE}/>
 
       {/* <Author/> */}

@@ -11,8 +11,8 @@ import { LegendOrdinal } from "@visx/legend";
 
 const purple1 = "#6c5efb";
 const purple2 = "#c998ff";
-export const purple3 = "#a44afe";
-export const background = "#eaedff";
+ const purple3 = "#a44afe";
+ const background = "#eaedff";
 const defaultMargin = { top: 40, right: 0, bottom: 0, left: 0 };
 const tooltipStyles = {
   ...defaultStyles,
@@ -22,7 +22,7 @@ const tooltipStyles = {
 };
 
 
-const testData = cityTemperature.slice(0, 12);
+const testData = cityTemperature.slice(0, 1);
 
 // MAIN FUNCTION STARTS HERE!!!
 export default function Example({
@@ -41,34 +41,45 @@ export default function Example({
     showTooltip,
   } = useTooltip();
   
-  console.log(data)
   
+ data = data.slice(2,3);
+ console.log(data)
+
+ //for the test data this needs to be date and for the "real" month
+  const keys = Object.keys(data[0]).filter((d) => d !== "month");
   
-  const keys = Object.keys(data[0]).filter((d) => d !== "date");
-  
-  const temperatureTotals = data.reduce((allTotals, currentDate) => {
-    const totalTemperature = keys.reduce((dailyTotal, k) => {
-      dailyTotal += Number(currentDate[k]);
-      return dailyTotal;
+  const categoryTotals = data.reduce((allTotals, currentMonth) => {
+    const totalCount = keys.reduce((monthlyTotal, k) => {
+      monthlyTotal += Number(currentMonth[k]);
+      return monthlyTotal;
     }, 0);
-    allTotals.push(totalTemperature);
+    allTotals.push(totalCount);
     return allTotals;
   }, []);
-  
-  const parseDate = timeParse("%Y-%m-%d");
-  const format = timeFormat("%b %d");
+
+  //Testdata
+  // const parseDate = timeParse("%Y-%m-%d");
+
+  //Regular Data
+  const parseDate = timeParse("%B_%Y");
+
+  //Testdata
+  // const format = timeFormat("%b %d");
+
+  //Regular data
+  const format = timeFormat("%b %y");
   const formatDate = (d) => format(parseDate(d));
   
   // accessors
-  const getDate = (d) => d.date;
+  const getDate = (d) => d.month;
   
   // scales
   const dateScale = scaleBand({
     domain: data.map(getDate),
     padding: 0.2,
   });
-  const temperatureScale = scaleLinear({
-    domain: [0, Math.max(...temperatureTotals)],
+  const linScale = scaleLinear({
+    domain: [0, Math.max(...categoryTotals)],
     nice: true,
   });
   const colorScale = scaleOrdinal({
@@ -86,7 +97,7 @@ export default function Example({
   const yMax = height - margin.top - 100;
 
   dateScale.rangeRound([0, xMax]);
-  temperatureScale.range([yMax, 0]);
+  linScale.range([yMax, 0]);
 
   return width < 10 ? null : (
     // relative position is needed for correct tooltip positioning
@@ -104,7 +115,7 @@ export default function Example({
           top={margin.top}
           left={margin.left}
           xScale={dateScale}
-          yScale={temperatureScale}
+          yScale={linScale}
           width={xMax}
           height={yMax}
           stroke="black"
@@ -117,7 +128,7 @@ export default function Example({
             keys={keys}
             x={getDate}
             xScale={dateScale}
-            yScale={temperatureScale}
+            yScale={linScale}
             color={colorScale}
           >
             {(barStacks) =>
@@ -192,9 +203,9 @@ export default function Example({
           style={tooltipStyles}
         >
           <div style={{ color: colorScale(tooltipData.key) }}>
-            <strong>{tooltipData.key}</strong>
+            <strong>Topic: {tooltipData.key}</strong>
           </div>
-          <div>{tooltipData.bar.data[tooltipData.key]}℉</div>
+          <div>Posts: {tooltipData.bar.data[tooltipData.key]}</div>
           <div>
             <small>{formatDate(getDate(tooltipData.bar.data))}</small>
           </div>
