@@ -7,14 +7,6 @@ import {
   defaultStyles,
 } from "@visx/tooltip";
 
-const TooltipProps = {
-  width: 0,
-  height: 0,
-  showControls: true,
-};
-
-let TooltipData = "";
-
 const positionIndicatorSize = 8;
 
 const tooltipStyles = {
@@ -46,15 +38,13 @@ export default function Example({ width, height, showControls = true }) {
     tooltipData,
     tooltipLeft = 0,
     tooltipTop = 0,
-  } =
-    useTooltip(
-    {
-      // initial tooltip state
-      tooltipOpen: true,
-      tooltipLeft: width / 3,
-      tooltipTop: height / 3,
-      tooltipData: "Move me with your mouse or finger",
-    });
+  } = useTooltip({
+    // initial tooltip state
+    tooltipOpen: true,
+    tooltipLeft: width / 3,
+    tooltipTop: height / 3,
+    tooltipData: "Move me with your mouse or finger",
+  });
 
   // event handlers
   const handlePointerMove = useCallback(
