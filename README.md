@@ -51,6 +51,7 @@ Main issues / problems:
 This task took a significant amount of time so I have not done the following which are necessary:
 
 1. Refactoring - remove all comments, redundant node modules, module names, folder structure
+unused charts, unused Author query (too ambitious!). Old console.logs. 
 
 2. Convert to Typescript? (Depends on the rest of the code base)
 

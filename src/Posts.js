@@ -1,10 +1,9 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
 import * as Util from "./Utilities";
-import BarStack from "./BarStack";
+import StackedBarChart from "./BarStack";
 import ParentSize from "@visx/responsive/lib/components/ParentSize";
 import styles from "./GraphContainer.module.css";
-
 
 //Posts by creation month
 const GET_POSTS = gql`
@@ -64,47 +63,57 @@ const Posts = (props, { onPostSelected }) => {
   // the top 3 topics by frequency each month
 
   //   // convert object to key's array
-const keys = Object.keys(groupedTopics);
+  const keys = Object.keys(groupedTopics);
 
-//Define an empty dataset
-let dataset = [];
-let thisMonth={};
+  //Define an empty dataset
+  let dataset = [];
+  let thisMonth = {};
 
+  //   // iterate over object
+  keys.forEach((currentMonth) => {
+    function occurences(dataArray) {
+      return dataArray.reduce(function (r, row) {
+        r[row.Topic] = ++r[row.Topic] || 1;
+        return r;
+      }, {});
+    }
 
-//   // iterate over object
-keys.forEach((currentMonth) => {
-   
-  function occurences(dataArray) {
-    return dataArray.reduce(function (r, row) {
-      r[row.Topic] = ++r[row.Topic] || 1;
-      return r;
-    }, {});
-  }
+    let occuring = occurences(groupedTopics[currentMonth]);
 
-  let occuring = occurences(groupedTopics[currentMonth]);
+    const topThree = Object.fromEntries(
+      Object.entries(occuring)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 3)
+    );
 
-  const topThree = Object.fromEntries(
-    Object.entries(occuring)
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 3)
-  );
-  
-  thisMonth = {
-    month: currentMonth,
-    ...topThree,
-  };
-  
-  dataset.push(thisMonth);
+    thisMonth = {
+      month: currentMonth,
+      ...topThree,
+    };
 
-});
+    dataset.push(thisMonth);
+  });
 
-// console.log("sorted", dataset);
+  //console.log("sorted", dataset.slice(0,1));
 
-
+  //This is where the bar chart elements get rendered
   return (
-    <ParentSize className={styles.graphContainer}>
-      {({ width, height }) => <BarStack width={width} height={height} data={dataset} />}
-    </ParentSize>
+    <div>
+      {dataset.map((dataline, index) => (
+        <div key={index}>
+          <ParentSize className={styles.graphContainer}>
+            {({ width, height }) => (
+              <StackedBarChart
+                width={width}
+                height={height}
+                dataline={dataline}
+                
+              />
+            )}
+          </ParentSize>
+        </div>
+      ))}
+    </div>
   );
 };
 

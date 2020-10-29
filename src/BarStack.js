@@ -3,7 +3,6 @@ import { BarStack } from "@visx/shape";
 import { Group } from "@visx/group";
 import { Grid } from "@visx/grid";
 import { AxisBottom } from "@visx/axis";
-import cityTemperature from "@visx/mock-data/lib/mocks/cityTemperature";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { timeParse, timeFormat } from "d3-time-format";
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
@@ -11,9 +10,11 @@ import { LegendOrdinal } from "@visx/legend";
 
 const purple1 = "#6c5efb";
 const purple2 = "#c998ff";
- const purple3 = "#a44afe";
- const background = "#eaedff";
+const purple3 = "#a44afe";
+const background = "#eaedff";
+
 const defaultMargin = { top: 40, right: 0, bottom: 0, left: 0 };
+
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
@@ -21,16 +22,15 @@ const tooltipStyles = {
   color: "white",
 };
 
-
-const testData = cityTemperature.slice(0, 1);
-
 // MAIN FUNCTION STARTS HERE!!!
-export default function Example({
+export default function StackedBarChart({
   width,
   height,
   events = false,
   margin = defaultMargin,
-  data=testData
+  dataline,
+  extra,
+  categoryTotal = 0,
 }) {
   const {
     tooltipOpen,
@@ -41,36 +41,26 @@ export default function Example({
     showTooltip,
   } = useTooltip();
   
-  
- data = data.slice(2,3);
- console.log(data)
+  categoryTotal = Object.values(dataline)
+    .slice(-3)
+    .reduce((acc, val) => acc + val);
 
- //for the test data this needs to be date and for the "real" month
+  //Quick hack to ensure we have an array rather than a JSON
+  let data = [];
+  data.push(dataline);
+  
+
+  //console.log("total",categoryTotal)
+  //Keys are for the stacks and legend - just ignore the month
   const keys = Object.keys(data[0]).filter((d) => d !== "month");
-  
-  const categoryTotals = data.reduce((allTotals, currentMonth) => {
-    const totalCount = keys.reduce((monthlyTotal, k) => {
-      monthlyTotal += Number(currentMonth[k]);
-      return monthlyTotal;
-    }, 0);
-    allTotals.push(totalCount);
-    return allTotals;
-  }, []);
+  //console.log(keys)
 
-  //Testdata
-  // const parseDate = timeParse("%Y-%m-%d");
-
-  //Regular Data
+  // See https://github.com/d3/d3-time-format
   const parseDate = timeParse("%B_%Y");
-
-  //Testdata
-  // const format = timeFormat("%b %d");
-
-  //Regular data
   const format = timeFormat("%b %y");
   const formatDate = (d) => format(parseDate(d));
-  
-  // accessors
+
+  // accessor
   const getDate = (d) => d.month;
   
   // scales
@@ -78,15 +68,18 @@ export default function Example({
     domain: data.map(getDate),
     padding: 0.2,
   });
+
+
   const linScale = scaleLinear({
-    domain: [0, Math.max(...categoryTotals)],
+    domain: [0, Math.max(categoryTotal)],
     nice: true,
   });
+
   const colorScale = scaleOrdinal({
     domain: keys,
     range: [purple1, purple2, purple3],
   });
-  
+
   let tooltipTimeout = 0;
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
@@ -99,6 +92,7 @@ export default function Example({
   dateScale.rangeRound([0, xMax]);
   linScale.range([yMax, 0]);
 
+  //Rect rx=rounded corners (SVG)
   return width < 10 ? null : (
     // relative position is needed for correct tooltip positioning
     <div style={{ position: "relative" }}>
@@ -109,7 +103,7 @@ export default function Example({
           width={width}
           height={height}
           fill={background}
-          rx={14}
+          rx={20}
         />
         <Grid
           top={margin.top}
@@ -141,9 +135,6 @@ export default function Example({
                     height={bar.height}
                     width={bar.width}
                     fill={bar.color}
-                    onClick={() => {
-                      if (events) alert(`clicked: ${JSON.stringify(bar)}`);
-                    }}
                     onMouseLeave={() => {
                       tooltipTimeout = window.setTimeout(() => {
                         hideTooltip();
@@ -163,8 +154,8 @@ export default function Example({
                 ))
               )
             }
-          </BarStack>
-        </Group>
+          </BarStack> 
+         </Group>
         <AxisBottom
           top={yMax + margin.top}
           scale={dateScale}
@@ -173,7 +164,7 @@ export default function Example({
           tickStroke={purple3}
           tickLabelProps={() => ({
             fill: purple3,
-            fontSize: 11,
+            fontSize: "0.8rem",
             textAnchor: "middle",
           })}
         />
@@ -206,9 +197,7 @@ export default function Example({
             <strong>Topic: {tooltipData.key}</strong>
           </div>
           <div>Posts: {tooltipData.bar.data[tooltipData.key]}</div>
-          <div>
-            <small>{formatDate(getDate(tooltipData.bar.data))}</small>
-          </div>
+          <div>Date: {formatDate(getDate(tooltipData.bar.data))}</div>
         </TooltipInPortal>
       )}
     </div>
