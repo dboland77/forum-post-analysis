@@ -7,6 +7,13 @@ export function getDateFromEpoch(dt) {
   return d;
 }
 
+export function occurences(dataArray) {
+  return dataArray.reduce(function (r, row) {
+    r[row.Topic] = ++r[row.Topic] || 1;
+    return r;
+  }, {});
+}
+
 // export function aggregateByMonth(data) {
 //   return 1;
 // }
@@ -15,6 +22,13 @@ export function getDateFromEpoch(dt) {
 //   return 1;
 // }
 
+
+ // function sortObject(obj) {
+  //   return Object.keys(obj).sort().reduce(function (result, key) {
+  //     result[key] = obj[key];
+  //     return result;
+  //   }, {});
+  // }
 
 export const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"

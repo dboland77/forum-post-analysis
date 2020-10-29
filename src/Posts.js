@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { gql, useQuery } from "@apollo/client";
 import * as Util from "./Utilities";
 import StackedBarChart from "./BarStack";
-import ParentSize from "@visx/responsive/lib/components/ParentSize";
-import styles from "./GraphContainer.module.css";
+// import { group } from "d3-array";
+// import { idText } from "typescript";
 
 //Posts by creation month
 const GET_POSTS = gql`
@@ -21,7 +21,7 @@ const GET_POSTS = gql`
   }
 `;
 
-const Posts = (props, { onPostSelected }) => {
+const Posts = (props) => {
   const { loading, error, data } = useQuery(GET_POSTS, {
     variables: { count: props.numberOfPosts },
   });
@@ -33,7 +33,7 @@ const Posts = (props, { onPostSelected }) => {
   let addMonthName = data.allPosts.map((item) => {
     return {
       ...item,
-      month: Util.monthNames[Util.getDateFromEpoch(item.createdAt).getMonth()],
+      month: Util.getDateFromEpoch(item.createdAt).getMonth(),
       year: Util.getDateFromEpoch(item.createdAt).getFullYear(),
     };
   });
@@ -41,12 +41,13 @@ const Posts = (props, { onPostSelected }) => {
   //Just choosing the most likely topic
   let myTopics = addMonthName.map((item) => {
     return {
-      month: `${item.month}_${item.year}`,
+      month: item.month,
+      year: item.year,
       Topic: item.likelyTopics[0].label,
     };
   });
 
-  // console.log(Util.sortLikelihood(myTopics))
+  //console.log("Topics",myTopics)
 
   function groupArrayOfObjects(list, key) {
     return list.reduce(function (rv, x) {
@@ -55,30 +56,24 @@ const Posts = (props, { onPostSelected }) => {
     }, {});
   }
 
-  // console.log("topics", myTopics);
-
   let groupedTopics = groupArrayOfObjects(myTopics, "month");
 
-  // Once we have the groupedTopics we can iterate through and GradientPinkBlue
+  //console.log("groups", groupedTopics)
+
+  // Once we have the groupedTopics we can iterate through and get
   // the top 3 topics by frequency each month
 
-  //   // convert object to key's array
+  // convert object to key's array
   const keys = Object.keys(groupedTopics);
 
   //Define an empty dataset
   let dataset = [];
   let thisMonth = {};
 
-  //   // iterate over object
-  keys.forEach((currentMonth) => {
-    function occurences(dataArray) {
-      return dataArray.reduce(function (r, row) {
-        r[row.Topic] = ++r[row.Topic] || 1;
-        return r;
-      }, {});
-    }
+  // LOOP OVER DATASET AND ADD TOP 3 BY MONTH
 
-    let occuring = occurences(groupedTopics[currentMonth]);
+  keys.forEach((currentMonth) => {
+    let occuring = Util.occurences(groupedTopics[currentMonth]);
 
     const topThree = Object.fromEntries(
       Object.entries(occuring)
@@ -87,33 +82,33 @@ const Posts = (props, { onPostSelected }) => {
     );
 
     thisMonth = {
-      month: currentMonth,
+      month: `${Util.monthNames[currentMonth]}_${groupedTopics[currentMonth][0].year}`,
       ...topThree,
     };
 
-    dataset.push(thisMonth);
+    let bShow = Object.keys(topThree).length < 3 ? false : true;
+
+    if (bShow) {
+      dataset.push(thisMonth);
+    }
   });
 
-  //console.log("sorted", dataset.slice(0,1));
+  // END LOOP
+  // console.log("unsorted", dataset);
 
   //This is where the bar chart elements get rendered
   return (
-    <div>
+    <Fragment>
       {dataset.map((dataline, index) => (
         <div key={index}>
-          <ParentSize className={styles.graphContainer}>
-            {({ width, height }) => (
-              <StackedBarChart
-                width={width}
-                height={height}
-                dataline={dataline}
-                
-              />
-            )}
-          </ParentSize>
+          <StackedBarChart width={150} height={300} dataline={dataline} />
         </div>
       ))}
-    </div>
+    </Fragment>
+
+         // <StackedBarChart width={100} height={220} dataline={dataset} />
+  
+    
   );
 };
 

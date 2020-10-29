@@ -1,5 +1,10 @@
 # Visualising forum posts (Topic analysis output)
 
+## Assumptions
+If there are less than three topics in a month I do not show the month
+I assign the topic with the highest probability from the likelihood distribution
+to the post
+
 ## Steps
 
 1. GraphiQL used to explore the faker dataset
@@ -45,12 +50,13 @@ Main issues / problems:
 7. Once I had the data grouped and aggregated it took a while to figure out how I wanted to visualise it. I chose to use a stacked bar graph.
 8. Having chosen this I soon realised I needed an individual bar each month rendered individually - not as straightforward as I thought. Each needed individual tooltip and legend also.
 9. I had to change the data to fit the format required by D3/Visx - lots of data processing and debugging.
+10. Controlling the height of the chart element when using a responsive or grid layout was tricky they kept rendering infinite height and generating an error on the <rect> component with attribute height: A negative value is not valid (Due to Parent Container passing a lower height than min of 150 and rect going negative). I have gone with fixed component sizes and grid for n<10000
 
 ## Improvements / Future Development.
 
-This task took a significant amount of time so I have not done the following which are necessary:
+This task took  me a significant amount of time so I have not done the following which are necessary:
 
-1. Refactoring - remove all comments, redundant node modules, module names, folder structure
+1. Refactoring - remove all comments, redundant node modules, module names, folder structure, restructure components, move pure JS to Utils.
 unused charts, unused Author query (too ambitious!). Old console.logs. 
 
 2. Convert to Typescript? (Depends on the rest of the code base)
@@ -62,3 +68,7 @@ unused charts, unused Author query (too ambitious!). Old console.logs.
 5. Full testing (Jest, Enzyme)
 
 6. Proper error handling and Error Boundaries
+
+7. Make it responsive (add back visx/responsive and/or media queries)
+
+

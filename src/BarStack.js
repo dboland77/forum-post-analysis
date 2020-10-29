@@ -8,12 +8,14 @@ import { timeParse, timeFormat } from "d3-time-format";
 import { useTooltip, useTooltipInPortal, defaultStyles } from "@visx/tooltip";
 import { LegendOrdinal } from "@visx/legend";
 
-const purple1 = "#6c5efb";
-const purple2 = "#c998ff";
-const purple3 = "#a44afe";
+import styles from "./BarStack.module.css";
+
+const purple1 = "#a1c4fd";
+const purple2 = "#96e6a1";
+const purple3 = "#84fab0";
 const background = "#eaedff";
 
-const defaultMargin = { top: 40, right: 0, bottom: 0, left: 0 };
+const defaultMargin = { top: 10, right: 0, bottom: 0, left: 0 };
 
 const tooltipStyles = {
   ...defaultStyles,
@@ -40,7 +42,7 @@ export default function StackedBarChart({
     hideTooltip,
     showTooltip,
   } = useTooltip();
-  
+
   categoryTotal = Object.values(dataline)
     .slice(-3)
     .reduce((acc, val) => acc + val);
@@ -48,12 +50,9 @@ export default function StackedBarChart({
   //Quick hack to ensure we have an array rather than a JSON
   let data = [];
   data.push(dataline);
-  
 
-  //console.log("total",categoryTotal)
   //Keys are for the stacks and legend - just ignore the month
   const keys = Object.keys(data[0]).filter((d) => d !== "month");
-  //console.log(keys)
 
   // See https://github.com/d3/d3-time-format
   const parseDate = timeParse("%B_%Y");
@@ -62,19 +61,19 @@ export default function StackedBarChart({
 
   // accessor
   const getDate = (d) => d.month;
-  
+
   // scales
   const dateScale = scaleBand({
     domain: data.map(getDate),
     padding: 0.2,
   });
 
-
   const linScale = scaleLinear({
-    domain: [0, Math.max(categoryTotal)],
+    domain: [0, categoryTotal],
     nice: true,
   });
 
+  //This sets the colour scale for the legend
   const colorScale = scaleOrdinal({
     domain: keys,
     range: [purple1, purple2, purple3],
@@ -85,9 +84,10 @@ export default function StackedBarChart({
   const { containerRef, TooltipInPortal } = useTooltipInPortal();
 
   if (width < 10) return null;
+
   // bounds
   const xMax = width;
-  const yMax = height - margin.top - 100;
+  const yMax = height - margin.top - 30;
 
   dateScale.rangeRound([0, xMax]);
   linScale.range([yMax, 0]);
@@ -103,7 +103,7 @@ export default function StackedBarChart({
           width={width}
           height={height}
           fill={background}
-          rx={20}
+          rx={0}
         />
         <Grid
           top={margin.top}
@@ -154,8 +154,8 @@ export default function StackedBarChart({
                 ))
               )
             }
-          </BarStack> 
-         </Group>
+          </BarStack>
+        </Group>
         <AxisBottom
           top={yMax + margin.top}
           scale={dateScale}
@@ -163,27 +163,22 @@ export default function StackedBarChart({
           stroke={purple3}
           tickStroke={purple3}
           tickLabelProps={() => ({
-            fill: purple3,
-            fontSize: "0.8rem",
+            
             textAnchor: "middle",
           })}
         />
       </svg>
       <div
-        style={{
-          position: "absolute",
-          top: margin.top / 2 - 10,
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          fontSize: "14px",
-        }}
+        className={styles.legend}
       >
-        <LegendOrdinal
-          scale={colorScale}
-          direction="row"
-          labelMargin="0 15px 0 0"
-        />
+      <LegendOrdinal
+        scale={colorScale}
+        direction="column"
+        // labelMargin="0 0 0 0"
+        shape="circle"
+        // shapeWidth="10"
+        // shapeMargin="0"
+      />
       </div>
 
       {tooltipOpen && tooltipData && (

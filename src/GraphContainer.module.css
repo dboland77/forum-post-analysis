@@ -7,11 +7,25 @@
   transform: translate(-50%, -50%); 
 } */
 
-
 .graphContainer {
   display: grid;
-  max-width: 20rem;
-  max-height: 30rem;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  grid-template-rows: 1fr 1fr;
+  max-width: 80rem;
+  max-height: 70rem;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  justify-items: stretch;
+  row-gap: 0;
+  column-gap: 0;
 }
+
+/* .graphItem {
+  /* height:20px;
+  width:10px;
+  color:blue; */
+  /* max-width: 20rem;
+  max-height: 30rem;
+  top:50%;
+  width:10;
+  height:10;
+  line-height: 2rem;
+  margin:0;
+} */
