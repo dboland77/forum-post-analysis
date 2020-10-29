@@ -1,9 +1,34 @@
 # Visualising forum posts (Topic analysis output)
 
+This application retrieves user posts from a fake message board. 
+
+The posts have already been evaluated for "likely topics" with likelihood distribution available. 
+
+The application groups the data by month and stores the three topics most frequently encountered. 
+
+These topics are displayed in a stacked bar chart by month. 
+
+## Tech stack
+GraphQL API
+
+Apollo client to query
+
+React frontend
+
+Javascript for data retrieval and manipulation utility functions
+
+d3-time-format for time and date formatting
+
+VisX for data visualisation
+
+CSS for styling (inline and modular)
+
 ## Assumptions
-If there are less than three topics in a month I do not show the month
-I assign the topic with the highest probability from the likelihood distribution
-to the post
+1. The topic with the highest probability from the likelihood distribution is the one to assign as the topic for that post.
+
+2. If there are less than three topics in a month then that month should be excluded from the output.
+
+3. Just one data visualisation and query are required.
 
 ## Steps
 
@@ -70,5 +95,9 @@ unused charts, unused Author query (too ambitious!). Old console.logs.
 6. Proper error handling and Error Boundaries
 
 7. Make it responsive (add back visx/responsive and/or media queries)
+
+8. Add user interfaces such as the ability to change the count of records through a dropdown. 
+
+9. Add other queries and visualisations 
 
 
