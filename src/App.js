@@ -4,7 +4,7 @@ import styles from "./styles/GraphContainer.module.css";
 import Counter from "./components/Counter/Counter";
 import Layout from "./components/Layout/Layout";
 
-function App() {
+const App =() => {
   const [recordCount, setRecordCount] = useState(100);
   const [posts, setPosts] = useState(100);
 

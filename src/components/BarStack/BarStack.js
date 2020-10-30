@@ -24,8 +24,8 @@ const tooltipStyles = {
   color: "white",
 };
 
-// MAIN FUNCTION STARTS HERE!!!
-export default function StackedBarChart({
+
+const  StackedBarChart = ({
   width,
   height,
   events = false,
@@ -33,7 +33,7 @@ export default function StackedBarChart({
   dataline,
   extra,
   categoryTotal = 0,
-}) {
+}) => {
   const {
     tooltipOpen,
     tooltipLeft,
@@ -194,3 +194,6 @@ export default function StackedBarChart({
     </div>
   );
 }
+
+
+export default StackedBarChart;

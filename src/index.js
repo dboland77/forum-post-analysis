@@ -3,7 +3,6 @@ import { render } from "react-dom";
 import App from "./App";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
-//Posts
 const client = new ApolloClient({
   uri: "https://fakerql.nplan.io/graphql",
   cache: new InMemoryCache(),
