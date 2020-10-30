@@ -8,6 +8,15 @@ The application groups the data by month and stores the three topics most freque
 
 These topics are displayed in a stacked bar chart by month. 
 
+The user can choose the number of posts analysed and displayed. 
+
+---
+## To run the application
+---
+Download or clone this reposito, cd to the containing folder and run "npm install" to install the package dependencies.  
+
+Once the packages are installed (please check peer dependencies) you can run "npm start" from the same folder. 
+
 ---
 ## Tech stack
 ---
@@ -112,9 +121,6 @@ https://stackoverflow.com/questions/53849710/react-vx-chart-react-does-not-recog
 
 I took a pragmatic approach to this challenge and produced a working prototype. If this were to be accepted as meeting the user / stakeholder requirements then the following would need to be performed before it would be ready for being a release candidate to production. 
 
-1. Refactoring - remove all comments, redundant node modules, module names, folder structure, restructure components, move pure JS to Utils.
-unused charts, unused Author query (too ambitious!). Old console.logs. 
-
 1. Add error handling (currently non-existent)
 
 1. Convert to Typescript? (Depends on the rest of the code base)
@@ -124,6 +130,8 @@ unused charts, unused Author query (too ambitious!). Old console.logs.
 1. Add Redux for state management
 
 1. Switch to environment variable for the data URL
+
+1. Add better UX for long load times (spinner or progress bar, change cursor)
 
 1. Full testing 
 
@@ -136,5 +144,6 @@ unused charts, unused Author query (too ambitious!). Old console.logs.
 1. Add any required user interaction   
 
 1. Add other queries and visualisations for more insight to the data 
+
 
 

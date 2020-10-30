@@ -138,7 +138,7 @@ export default function StackedBarChart({
                     onMouseLeave={() => {
                       tooltipTimeout = window.setTimeout(() => {
                         hideTooltip();
-                      }, 300);
+                      }, 100);
                     }}
                     onMouseMove={(event) => {
                       if (tooltipTimeout) clearTimeout(tooltipTimeout);
@@ -163,7 +163,6 @@ export default function StackedBarChart({
           stroke={purple3}
           tickStroke={purple3}
           tickLabelProps={() => ({
-            
             textAnchor: "middle",
           })}
         />
@@ -174,10 +173,7 @@ export default function StackedBarChart({
       <LegendOrdinal
         scale={colorScale}
         direction="column"
-        // labelMargin="0 0 0 0"
         shape="circle"
-        // shapeWidth="10"
-        // shapeMargin="0"
       />
       </div>
 

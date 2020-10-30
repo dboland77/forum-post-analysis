@@ -1,9 +1,7 @@
 import React, { Fragment } from "react";
 import { gql, useQuery } from "@apollo/client";
-import * as Util from "./Utilities";
-import StackedBarChart from "./BarStack";
-// import { group } from "d3-array";
-// import { idText } from "typescript";
+import * as Util from "../../Utils/Utilities";
+import StackedBarChart from "../BarStack/BarStack";
 
 //Posts by creation month
 const GET_POSTS = gql`
@@ -21,16 +19,23 @@ const GET_POSTS = gql`
   }
 `;
 
-const Posts = (props) => {
-  const { loading, error, data } = useQuery(GET_POSTS, {
-    variables: { count: props.numberOfPosts },
+const Posts = ({recordCount}) => {
+
+  const WIDTH = 150;
+  const HEIGHT = 300;
+
+  //Run the query
+  let { loading, error, data } = useQuery(GET_POSTS, {
+    variables: { count: recordCount },
   });
 
+  //Check result
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
 
-  // The code below creates month groups with 3 most likely topics
-  let addMonthName = data.allPosts.map((item) => {
+  // Pre-process the data 
+  // First convert the date and pull out the month and year
+  let convertDate = data.allPosts.map((item) => {
     return {
       ...item,
       month: Util.getDateFromEpoch(item.createdAt).getMonth(),
@@ -38,8 +43,9 @@ const Posts = (props) => {
     };
   });
 
-  //Just choosing the most likely topic
-  let myTopics = addMonthName.map((item) => {
+  // Then choose the most likely topic for each post and remove 
+  // fields we are not going to use
+  let Topics = convertDate.map((item) => {
     return {
       month: item.month,
       year: item.year,
@@ -47,30 +53,18 @@ const Posts = (props) => {
     };
   });
 
-  //console.log("Topics",myTopics)
+  // Group the topics by month
+  let groupedTopics = Util.groupArrayOfObjects(Topics, "month");
 
-  function groupArrayOfObjects(list, key) {
-    return list.reduce(function (rv, x) {
-      (rv[x[key]] = rv[x[key]] || []).push(x);
-      return rv;
-    }, {});
-  }
 
-  let groupedTopics = groupArrayOfObjects(myTopics, "month");
+  // Once we have the groupedTopics we can iterate through each one
+  // and get the top 3 topics by frequency each month
 
-  //console.log("groups", groupedTopics)
-
-  // Once we have the groupedTopics we can iterate through and get
-  // the top 3 topics by frequency each month
-
-  // convert object to key's array
+  // Grab the keys (i.e. months)
   const keys = Object.keys(groupedTopics);
 
-  //Define an empty dataset
   let dataset = [];
   let thisMonth = {};
-
-  // LOOP OVER DATASET AND ADD TOP 3 BY MONTH
 
   keys.forEach((currentMonth) => {
     let occuring = Util.occurences(groupedTopics[currentMonth]);
@@ -93,22 +87,14 @@ const Posts = (props) => {
     }
   });
 
-  // END LOOP
-  // console.log("unsorted", dataset);
-
-  //This is where the bar chart elements get rendered
   return (
     <Fragment>
       {dataset.map((dataline, index) => (
         <div key={index}>
-          <StackedBarChart width={150} height={300} dataline={dataline} />
+          <StackedBarChart width={WIDTH} height={HEIGHT} dataline={dataline} />
         </div>
       ))}
-    </Fragment>
-
-         // <StackedBarChart width={100} height={220} dataline={dataset} />
-  
-    
+    </Fragment>    
   );
 };
 

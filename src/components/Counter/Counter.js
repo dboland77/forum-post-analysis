@@ -1,10 +1,8 @@
-import React, { useState } from "react";
-import Card from "./Card";
+import React from "react";
+import Card from "../Card/Card";
 import styles from "./Counter.module.css";
 
-const Counter = () => {
-  const [enteredCount, setCount] = useState([]);
-
+const Counter = ({enteredCount, handleCount, handleClick}) => {
   return (
     <Card>
       <div className={styles.Counter}>
@@ -13,15 +11,11 @@ const Counter = () => {
           type="number"
           id="counter"
           value={enteredCount}
-          onChange={(event) => {
-            setCount(event.target.value);
-          }}
+          onChange={handleCount}
         />
       </div>
         <button
-          onClick={(event) => {
-            console.log(enteredCount);
-          }}
+          onClick={handleClick}
         >
           Refresh
         </button>

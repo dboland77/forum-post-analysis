@@ -1,27 +1,36 @@
-import React, { Fragment } from "react";
-import Posts from "./Posts";
-import styles from "./GraphContainer.module.css";
-import Counter from "./components/Counter";
-import Layout from "../src/components/Layout";
-
-const POSTS_TO_RETRIEVE = 70;
-
-// Low values of n result in not all months being "filled"
-// At 10000 records it is close to being steady state
-// At 50,000 records it *is* steady state
+import React, { Fragment, useState } from "react";
+import Posts from "./components/Posts/Posts";
+import styles from "./styles/GraphContainer.module.css";
+import Counter from "./components/Counter/Counter";
+import Layout from "./components/Layout/Layout";
 
 function App() {
+  const [recordCount, setRecordCount] = useState(100);
+  const [posts, setPosts] = useState(100);
+
+  const handleRecordCount = (event) => {
+    setRecordCount(event.target.value);
+  };
+
+  const handleClick = (event) =>{
+      setPosts(parseInt(recordCount));
+  }
+
   return (
     <Fragment>
       <Layout>
         <div className={styles.headerSection}>
-          <h1 className={styles.headerItem}>Top 3 Monthly Topics</h1>
           <div className={styles.counterItem}>
-            <Counter />
+            <Counter
+              enteredCount={recordCount}
+              handleCount={handleRecordCount}
+              handleClick={handleClick}
+            />
           </div>
+          <h1 className={styles.headerItem}>Top 3 Monthly Topics</h1>
         </div>
         <div className={styles.graphContainer}>
-          <Posts numberOfPosts={POSTS_TO_RETRIEVE} />
+          <Posts recordCount={posts} />
         </div>
       </Layout>
     </Fragment>
@@ -29,11 +38,3 @@ function App() {
 }
 
 export default App;
-
-/*TODO
-1. Remove Extra modules (graphs etc)
-2. Tidy up folder structure
-3. uninstall node modules that are not needed
-4. Allow the n parameter to be specified via dropdown
-5. Tidy up README again
-6. submit!*/
