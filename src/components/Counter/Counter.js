@@ -2,7 +2,7 @@ import React from "react";
 import Card from "../Card/Card";
 import styles from "./Counter.module.css";
 
-const Counter = ({enteredCount, handleCount, handleClick}) => {
+const Counter = ({ enteredCount, handleCount, handleClick }) => {
   return (
     <Card>
       <div className={styles.Counter}>
@@ -14,11 +14,7 @@ const Counter = ({enteredCount, handleCount, handleClick}) => {
           onChange={handleCount}
         />
       </div>
-        <button
-          onClick={handleClick}
-        >
-          Refresh
-        </button>
+      <button onClick={handleClick}>Refresh</button>
     </Card>
   );
 };

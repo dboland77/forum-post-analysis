@@ -13,7 +13,7 @@ The user can choose the number of posts analysed and displayed.
 ---
 ## To run the application
 ---
-Download or clone this reposito, cd to the containing folder and run "npm install" to install the package dependencies.  
+Download or clone this repository, cd to the containing folder and run "npm install" to install the package dependencies.  
 
 Once the packages are installed (please check peer dependencies) you can run "npm start" from the same folder. 
 
@@ -52,9 +52,9 @@ HTML
 ## Steps taken to approach the task
 ---
 
-1. GraphiQL used to manually explore the faker dataset with guidance from the github Readme.
+1. GraphiQL used to manually explore the faker dataset with guidance from the github Readme
 
-1. I decided to use the first example in the task specification to visualise. 
+1. I decided to use the first example in the task specification to visualise 
 
 1. Create-React-App bootstrapped project and added dependencies for Apollo and GraphQL
 
@@ -62,15 +62,15 @@ HTML
 
 1. Query the dataset with react and ensure that some posts are retrieved successfully
 
-1. Count passed as a variable to the graphql query (firstly hardcoded in the UseQuery hook, later set as a constant in App.js and passed as props). 
+1. Count passed as a variable to the graphql query (firstly hardcoded in the UseQuery hook, later set in App.js and passed as props)
 
 1. For the likelihood distribution I decided to  take the most probable entry as the label for that post
 
 1. I wrote javascript utility functions to format, aggregate the data by month and obtain and store the most prevalent 3 topics each month. 
 
-1. Once I was happy with the results from the dataset I looked at VisX documentation to learn about it.
+1. Once I was happy with the results from the dataset I looked at VisX documentation to learn about it
 
-1. I explored three visx examples and got them working (area chart, tooltip and stacked bar chart)
+1. I explored three Visx examples and got them working (area chart, tooltip and stacked bar chart) in javascript
 
 1. I decided to visualise the data with a series of stacked bar charts
 
@@ -80,13 +80,13 @@ HTML
 
 1. I played with the sample size (POSTS_TO_RETRIEVE) to determine the effects. I noted that for smaller sample sizes I might not get any results in a given month and chose to just not display a bar chart for that month if that was the case
 
-1. I continued to play with the sample size and noted that as it increased the distribution was approaching something of a steady state. I did not determine where the limiting distribution lies but noted that when I set the sample size to 50000 I almost got a uniform result for the top 3 (barring February in which the results were the same topics but with the top 2 switched)
+1. I continued to play with the sample size and noted that as it increased the distribution was approaching something of a steady state. I did not determine where the limiting distribution lies but noted that when I set the sample size to 50000 I almost got a uniform result for the top 3 (barring a month or two in which the results were the same topics but with the order a little switched)
 
 1. I set the sample size to 70000 and I get a uniform top 3 of "fishing, birthday, potato". GraphQl can return this amount of data very quickly as it just sends JSON and the data processing is performed in Javascript. 
 
 1. As I found this interesting I thought the user might too so I added a user input field to allow the user to dynamically play with the sample size. 
 
-1. As I was learning as I went I did not pay much attention to any code or project formatting with my emphasis being firmly on getting a working prototype, so the codebase was not in a presentable state. I re-factored and wrote the Readme. 
+1. As I was learning as I went I did not pay much attention to any code or project formatting with my emphasis being firmly on getting a working prototype, so the codebase was not in a presentable state. I re-factored, pruned (for build speed) and wrote the Readme. 
 
 ---
 ## Bugs encountered
@@ -99,7 +99,7 @@ lowercase `xscale` instead"
 https://stackoverflow.com/questions/53849710/react-vx-chart-react-does-not-recognize-the-xscale-prop-on-a-dom-element
 
 
-- Controlling the height of the chart element when using a responsive or grid layout was tricky they kept rendering infinite height and generating an error on the <rect> component with attribute height: A negative value is not valid (Due to Parent Container passing a lower height than min of 150 and rect going negative). I have gone with fixed component sizes and grid for n<10000
+- Controlling the height of the chart element when using a responsive or grid layout was tricky they kept rendering infinite height and generating an error on the <rect> component with attribute height: A negative value is not valid (Due to Parent Container passing a lower height than min of 150 and rect going negative). I have gone with fixed component sizes and grid.
 
 ---
 ## Learning / Snaglist
@@ -110,7 +110,7 @@ https://stackoverflow.com/questions/53849710/react-vx-chart-react-does-not-recog
 1. I had never used Visx so had to learn
 1. I had to write quite a few utility javascript functions and learn about unix timestamps and data manipulation with JSON to parse the data and format for visualisation
 
-1. Visx examples are mainly in Typescript so I had to decide whether to interpret this to javascript or convert my existing project to typescript. I went with the former
+1. Visx examples are mainly in Typescript so I had to decide whether to interpret this to javascript or convert my existing project to Typescript (I went with the former)
 
 1. Once I had the data grouped and aggregated it took a while to figure out how I wanted to visualise it. I chose to use stacked bar graphs 
 

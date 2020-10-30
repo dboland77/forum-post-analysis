@@ -3,7 +3,6 @@ import { gql, useQuery } from "@apollo/client";
 import * as Util from "../../Utils/Utilities";
 import StackedBarChart from "../BarStack/BarStack";
 
-//Posts by creation month
 const GET_POSTS = gql`
   query getPosts($count: Int!) {
     allPosts(count: $count) {
@@ -19,8 +18,7 @@ const GET_POSTS = gql`
   }
 `;
 
-const Posts = ({recordCount}) => {
-
+const Posts = ({ recordCount }) => {
   const WIDTH = 150;
   const HEIGHT = 300;
 
@@ -33,7 +31,7 @@ const Posts = ({recordCount}) => {
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
 
-  // Pre-process the data 
+  // Pre-process the data
   // First convert the date and pull out the month and year
   let convertDate = data.allPosts.map((item) => {
     return {
@@ -43,7 +41,7 @@ const Posts = ({recordCount}) => {
     };
   });
 
-  // Then choose the most likely topic for each post and remove 
+  // Then choose the most likely topic for each post and remove
   // fields we are not going to use
   let Topics = convertDate.map((item) => {
     return {
@@ -55,7 +53,6 @@ const Posts = ({recordCount}) => {
 
   // Group the topics by month
   let groupedTopics = Util.groupArrayOfObjects(Topics, "month");
-
 
   // Once we have the groupedTopics we can iterate through each one
   // and get the top 3 topics by frequency each month
@@ -94,7 +91,7 @@ const Posts = ({recordCount}) => {
           <StackedBarChart width={WIDTH} height={HEIGHT} dataline={dataline} />
         </div>
       ))}
-    </Fragment>    
+    </Fragment>
   );
 };
 

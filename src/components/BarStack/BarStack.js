@@ -24,8 +24,7 @@ const tooltipStyles = {
   color: "white",
 };
 
-
-const  StackedBarChart = ({
+const StackedBarChart = ({
   width,
   height,
   events = false,
@@ -167,14 +166,8 @@ const  StackedBarChart = ({
           })}
         />
       </svg>
-      <div
-        className={styles.legend}
-      >
-      <LegendOrdinal
-        scale={colorScale}
-        direction="column"
-        shape="circle"
-      />
+      <div className={styles.legend}>
+        <LegendOrdinal scale={colorScale} direction="column" shape="circle" />
       </div>
 
       {tooltipOpen && tooltipData && (
@@ -193,7 +186,6 @@ const  StackedBarChart = ({
       )}
     </div>
   );
-}
-
+};
 
 export default StackedBarChart;
