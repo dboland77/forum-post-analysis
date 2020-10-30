@@ -1,6 +1,5 @@
 // Utility function to format the date
 // By default GraphQL stores dates as a milliseconds epoch time string
-
 export function getDateFromEpoch(dt) {
   let d = new Date(0); //Create a new Epoch Date @ 01/01/1970
   d.setUTCMilliseconds(dt); // Add the number of milliseconds returned to get the date
@@ -13,22 +12,6 @@ export function occurences(dataArray) {
     return r;
   }, {});
 }
-
-// export function aggregateByMonth(data) {
-//   return 1;
-// }
-
-// export function aggregateByAuthor(data) {
-//   return 1;
-// }
-
-
- // function sortObject(obj) {
-  //   return Object.keys(obj).sort().reduce(function (result, key) {
-  //     result[key] = obj[key];
-  //     return result;
-  //   }, {});
-  // }
 
 export const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
