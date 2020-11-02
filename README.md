@@ -17,6 +17,8 @@ Download or clone this repository, cd to the containing folder and run "npm inst
 
 Once the packages are installed (please check peer dependencies) you can run "npm start" from the same folder. 
 
+The number of records returned is initially set to 100. See comments below on record size but this can be changed by the user (I recommend 50000+).
+
 ---
 ## Tech stack
 ---
